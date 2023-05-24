@@ -46,19 +46,24 @@ module.exports = {
       });
   },
   async addFriend(req, res) {
-    console.log('You are adding an friend');
-    const user = await User.findOne({ _id: req.params.userId })
-    const friend = await User.findOne({ _id: req.params.friendId })
+    try{
+      console.log('You are adding an friend');
+      const user = await User.findOne({ _id: req.params.userId })
+      const friend = await User.findOne({ _id: req.params.friendId })
 
-    if (!user || !friend) {
-      res
-        .status(404)
-        .json({ message: 'No users found with those IDs :(' })
+      if (!user || !friend) {
+        res
+          .status(404)
+          .json({ message: 'No users found with those IDs :(' })
+      }
+      user.friends.push(friend.id)
+      friend.friends.push(user.id)
+      await user.save()
+      await friend.save()
+      res.json(user)
+      }
+    catch(err) {
+      res.status(500).json(err);
     }
-    user.friends.push(friend.id)
-    friend.friends.push(user.id)
-    await user.save()
-    await friend.save()
-    res.json([user,friend])
   },
 };
