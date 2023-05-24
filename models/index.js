@@ -1,7 +1,7 @@
 import User from "./User"
-import Other from "./Other"
+import Thought from "./Thought"
 
 
 
 
-module.exports = { Other, User }
+module.exports = { Thought, User }
