@@ -47,25 +47,18 @@ module.exports = {
   },
   async addFriend(req, res) {
     console.log('You are adding an friend');
-    const ids = [req.params.userId, req.body.friendId]
-    const users = await User.find({ _id: ids})
+    const user = await User.findOne({ _id: req.params.userId })
+    const friend = await User.findOne({ _id: req.params.friendId })
 
-    console.log(users.length)
-    if (!users) {
+    if (!user || !friend) {
       res
         .status(404)
         .json({ message: 'No users found with those IDs :(' })
     }
-    await User.findOneAndUpdate(
-      { _id: users[0].id },
-      { $addToSet: { friends: users[1].id } },
-      { runValidators: true, new: true }
-    )
-    await User.findOneAndUpdate(
-      { _id: users[1].id },
-      { $addToSet: { friends: users[0].id } },
-      { runValidators: true, new: true }
-    )
-    res.json(await User.find({ _id: ids}))
+    user.friends.push(friend.id)
+    friend.friends.push(user.id)
+    await user.save()
+    await friend.save()
+    res.json([user,friend])
   },
 };
