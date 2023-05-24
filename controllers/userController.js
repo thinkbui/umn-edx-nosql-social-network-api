@@ -45,22 +45,27 @@ module.exports = {
         res.status(500).json(err);
       });
   },
-  addFriend(req, res) {
+  async addFriend(req, res) {
     console.log('You are adding an friend');
-    console.log(req.params);
-    console.log(req.body);
-    User.findOneAndUpdate(
-      { _id: req.params.userId },
-      { $addToSet: { friends: req.body.friendId } },
+    const ids = [req.params.userId, req.body.friendId]
+    const users = await User.find({ _id: ids})
+
+    console.log(users.length)
+    if (!users) {
+      res
+        .status(404)
+        .json({ message: 'No users found with those IDs :(' })
+    }
+    await User.findOneAndUpdate(
+      { _id: users[0].id },
+      { $addToSet: { friends: users[1].id } },
       { runValidators: true, new: true }
     )
-      .then((user) =>
-        !user
-          ? res
-              .status(404)
-              .json({ message: 'No user found with that ID :(' })
-          : res.json(user)
-      )
-      .catch((err) => res.status(500).json(err));
+    await User.findOneAndUpdate(
+      { _id: users[1].id },
+      { $addToSet: { friends: users[0].id } },
+      { runValidators: true, new: true }
+    )
+    res.json(await User.find({ _id: ids}))
   },
 };
