@@ -1,14 +1,13 @@
-const { Schema, model } = require('mongoose');
-const reactionSchema = require('./Reaction');
+const { Schema } = require('mongoose');
 
-const thoughtSchema = new Schema(
+const reactionSchema = new Schema(
   {
-    thoughtText: {
+    reactionBody: {
       type: String,
       required: true,
       maxlength: 280,
       minlength: 1,
-      default: 'User has a thought.',
+      default: 'User has a reaction.',
     },
     username: {
       type: String,
@@ -19,7 +18,6 @@ const thoughtSchema = new Schema(
       type: Date,
       default: Date.now,
     },
-    reactions: [reactionSchema],
   },
   {
     toJSON: {
@@ -29,6 +27,5 @@ const thoughtSchema = new Schema(
   }
 );
 
-const Thought = model('thought', thoughtSchema);
 
-module.exports = Thought;
+module.exports = reactionSchema;
