@@ -95,12 +95,12 @@ module.exports = {
           .status(404)
           .json({ message: 'No users found with those IDs :(' })
       }
-      user.friends = user.friends.filter(fid => fid === friend.id);
-      friend.friends = friend.friends.filter(fid => fid === user.id);
+      user.friends = user.friends.filter(fid => fid != req.params.friendId);
+      friend.friends = friend.friends.filter(fid => fid != req.params.userId);
       await user.save()
       await friend.save()
       res.json(user)
-      }
+    }
     catch(err) {
       console.log(err);
       res.status(500).json(err);
