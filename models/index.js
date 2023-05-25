@@ -1,7 +1,7 @@
-import User from "./User"
-import Other from "./Other"
+const User = require("./User")
+const Thought = require("./Thought")
 
 
 
 
-module.exports = { Other, User }
+module.exports = { Thought, User }

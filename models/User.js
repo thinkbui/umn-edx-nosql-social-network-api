@@ -1,50 +1,37 @@
-const { Model, DataTypes } = require('sequelize');
-const sequelize = require('../config/connection');
-const bcrypt = require("bcrypt")
+const { Schema, model } = require('mongoose');
 
-class User extends Model {
-  async validatePassword(suppliedPassword){
-    return bcrypt.compare(suppliedPassword, this.password)
-  }
-}
-
-User.init(
+const userSchema = new Schema(
   {
-    fname: {
-      type: DataTypes.STRING
-    },
-    lname: {
-      type: DataTypes.STRING
+    username: {
+      type: String,
+      required: true,
+      max_length: 50,
     },
     email: {
-      type: DataTypes.STRING,
-      validate: {
-        isEmail: true
-      }
+      type: String,
+      required: true,
+      max_length: 50,
     },
-    password: {
-      type: DataTypes.STRING,
-      validate: {
-        len: [6]
-      }
-    }
+    thoughts: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: 'thought',
+      },
+    ],
+    friends: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: 'user',
+      },
+    ],
   },
   {
-    hooks: {
-      beforeCreate: async function(data){
-        data.password = await bcrypt.hash(data.password, 10)
-        return data
-      },
-      beforeUpdate: async function(data){
-        data.password = await bcrypt.hash(data.password, 10)
-        return data
-      }
+    toJSON: {
+      getters: true,
     },
-    sequelize,
-    timestamps: true,
-    underscored: true,
-    modelName: 'User'
   }
 );
+
+const User = model('user', userSchema);
 
 module.exports = User;
