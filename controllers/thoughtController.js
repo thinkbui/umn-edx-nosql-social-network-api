@@ -76,4 +76,20 @@ module.exports = {
       res.status(500).json(err);
     }
   },
+  async removeReaction(req, res) {
+    try {
+      console.log("Removing reaction")
+      const thought = await Thought.findOne({ _id: req.params.thoughtId })
+      if(!thought){
+        res.status(404).json({ message: 'No thought found with that Id :(' })
+      } else {
+        thought.reactions.pull({ _id: req.body.reactionId })
+        await thought.save();
+        res.json(thought)
+      }
+    }
+    catch(err) {
+      res.status(500).json(err);
+    }
+  }
 };
