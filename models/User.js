@@ -5,12 +5,14 @@ const userSchema = new Schema(
     username: {
       type: String,
       required: true,
-      max_length: 50,
+      unique: true,
+      trim: true,
     },
     email: {
       type: String,
       required: true,
-      max_length: 50,
+      unique: true,
+      match: [/^([a-z0-9_\.-]+)@([\da-z\.-]+)\.([a-z\.]{2,6})$/, 'Please fill a valid email address']
     },
     thoughts: [
       {
