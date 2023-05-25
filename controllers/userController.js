@@ -84,4 +84,26 @@ module.exports = {
       res.status(500).json(err);
     }
   },
+  async removeFriend(req, res) {
+    try{
+      console.log('You are removing an friend');
+      const user = await User.findOne({ _id: req.params.userId })
+      const friend = await User.findOne({ _id: req.params.friendId })
+
+      if (!user || !friend) {
+        res
+          .status(404)
+          .json({ message: 'No users found with those IDs :(' })
+      }
+      user.friends = user.friends.filter(fid => fid === friend.id);
+      friend.friends = friend.friends.filter(fid => fid === user.id);
+      await user.save()
+      await friend.save()
+      res.json(user)
+      }
+    catch(err) {
+      console.log(err);
+      res.status(500).json(err);
+    }
+  },
 };
