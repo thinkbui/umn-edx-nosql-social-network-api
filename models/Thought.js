@@ -32,6 +32,10 @@ thoughtSchema.virtual('reactionCount').get(function () {
   return this.reactions.length;
 });
 
+thoughtSchema.virtual('reactionAgg').get(function() {
+  return this.reactions.map(function(reaction){return reaction.reactionBody}).join(",");
+});
+
 const Thought = model('thought', thoughtSchema);
 
 module.exports = Thought;
