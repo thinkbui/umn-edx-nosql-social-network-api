@@ -17,3 +17,5 @@ There are also no checks to ensure that, during the add of a friend, that friend
 
 ## DEMO
 You can view a demo of the app on [YouTube](https://www.youtube.com/watch?v=USN0FvfViAQ).
+
+![Screenshot](./assets/images/maxresdefault.jpg)
